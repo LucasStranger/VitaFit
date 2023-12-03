@@ -1,0 +1,74 @@
+class Aluno:
+    def __init__(self, nome, cpf, celular, email, idade, peso, altura):
+        self.nome = nome
+        self.cpf = cpf
+        self.celular = celular
+        self.email = email
+        self.idade = idade
+        self.peso = peso
+        self.altura = altura
+        self.historico_medico = []
+        self.metas = {}
+        self.avaliacoes = []
+        self.perfil_treino = {}
+
+    def adicionar_historico_medico(self, informacao):
+        self.historico_medico.append(informacao)
+
+    def adicionar_avaliacao(self, avaliacao):
+        self.avaliacoes.append(avaliacao)
+
+    def adicionar_perfil_treino(self, tipo, informacoes):
+        self.perfil_treino[tipo] = informacoes
+
+    def adicionar_rotina_treino(self, tipo_treino, rotina):
+        if tipo_treino in self.perfil_treino:
+            self.perfil_treino[tipo_treino]['rotina'] = rotina
+
+    def adicionar_desempenho(self, tipo_treino, desempenho):
+        if tipo_treino in self.perfil_treino:
+            self.perfil_treino[tipo_treino]['desempenho'] = desempenho
+
+
+class CentralTreinamento:
+    def __init__(self):
+        self.biblioteca_videos = {}
+
+    def adicionar_video(self, nome, link):
+        self.biblioteca_videos[nome] = link
+
+
+# Funções interligando Módulo 1 e Módulo 3
+
+def cadastrar_aluno():
+    # Código para cadastro de aluno do Módulo 1
+
+def adicionar_informacao_medica(aluno):
+    # Código para adicionar histórico médico do Módulo 1
+
+def realizar_avaliacao(aluno):
+    # Código para realizar avaliação do Módulo 1
+
+def criar_perfil_treino(aluno):
+    tipo = input("Tipo de treino: ")
+    informacoes = input("Informações do perfil de treino: ")
+    aluno.adicionar_perfil_treino(tipo, informacoes)
+    print("Perfil de treino criado com sucesso!")
+
+def adicionar_video(biblioteca):
+    nome = input("Nome do vídeo: ")
+    link = input(f"Link do vídeo de {nome}: ")
+    biblioteca.adicionar_video(nome, link)
+    print("Vídeo adicionado à biblioteca com sucesso!")
+
+def criar_rotina_treino(aluno):
+    tipo_treino = input("Tipo de treino para adicionar rotina: ")
+    rotina = input(f"Rotina de treino para {tipo_treino}: ")
+    aluno.adicionar_rotina_treino(tipo_treino, rotina)
+    print("Rotina de treino adicionada com sucesso!")
+
+def adicionar_desempenho_treino(aluno):
+    tipo_treino = input("Tipo de treino para adicionar desempenho: ")
+    desempenho = input(f"Desempenho do aluno para {tipo_treino}: ")
+    aluno.adicionar_desempenho(tipo_treino, desempenho)
+    print("Desempenho adicionado com sucesso!")
