@@ -1,0 +1,132 @@
+class Aluno:
+    def __init__(self):
+        self.perfil_nutricional = {}
+        self.questionario = {}
+        self.registro_dieta = []
+        self.orientacoes_nutricionais = {}
+        self.acompanhamento_agua = {}
+        self.acompanhamento_suplementos = {}
+        self.alertas = []
+        self.feedback_nutricionista = []
+
+    def preencher_questionario_inicial(self):
+        print("### Preencher Questionário Inicial ###")
+        nome = input("Nome completo: ")
+        idade = int(input("Idade: "))
+        alergias = input("Alergias alimentares (separe por vírgula se houver): ").split(',')
+        objetivos_nutricionais = input("Objetivos nutricionais: ")
+
+        self.questionario = {
+            'nome': nome,
+            'idade': idade,
+            'alergias': alergias,
+            'objetivos_nutricionais': objetivos_nutricionais
+        }
+        print("Questionário preenchido com sucesso!\n")
+
+    def atualizar_perfil_nutricional(self):
+        print("### Atualizar Perfil Nutricional ###")
+        peso = float(input("Peso atual (em kg): "))
+        altura = float(input("Altura atual (em metros): "))
+        preferencias_alimentares = input("Preferências alimentares: ")
+        restricoes_alimentares = input("Restrições alimentares: ")
+
+        self.perfil_nutricional = {
+            'peso': peso,
+            'altura': altura,
+            'preferencias_alimentares': preferencias_alimentares,
+            'restricoes_alimentares': restricoes_alimentares
+        }
+        print("Perfil nutricional atualizado com sucesso!\n")
+
+    def registrar_dieta_diaria(self):
+        print("### Registrar Dieta Diária ###")
+        dieta = input("Descreva sua dieta diária: ")
+        self.registro_dieta.append(dieta)
+        print("Dieta registrada com sucesso!\n")
+
+    def gerar_orientacoes_nutricionais(self):
+        print("### Gerar Orientações Nutricionais ###")
+        orientacoes = input("Forneça orientações nutricionais: ")
+        self.orientacoes_nutricionais = orientacoes
+        print("Orientações nutricionais geradas com sucesso!\n")
+
+    def registrar_acompanhamento_agua(self):
+        print("### Registrar Consumo de Água ###")
+        data = input("Data do registro (DD/MM/AAAA): ")
+        quantidade = float(input("Quantidade de água consumida (em ml): "))
+        self.acompanhamento_agua[data] = quantidade
+        print("Consumo de água registrado com sucesso!\n")
+
+    def registrar_acompanhamento_suplementos(self):
+        print("### Registrar Uso de Suplementos ###")
+        suplemento = input("Descreva o suplemento utilizado: ")
+        self.acompanhamento_suplementos = suplemento
+        print("Uso de suplemento registrado com sucesso!\n")
+
+    def adicionar_alerta(self):
+        print("### Adicionar Alerta ###")
+        alerta = input("Descreva o alerta: ")
+        self.alertas.append(alerta)
+        print("Alerta adicionado com sucesso!\n")
+
+    def fornecer_feedback_nutricionista(self):
+        print("### Fornecer Feedback ao Nutricionista ###")
+        feedback = input("Forneça seu feedback: ")
+        self.feedback_nutricionista.append(feedback)
+        print("Feedback enviado com sucesso!\n")
+
+
+# Função principal para interação do usuário
+def menu_nutricao():
+    aluno = Aluno()
+
+    while True:
+        print("### MENU NUTRIÇÃO ###")
+        print("1. Preencher Questionário Inicial")
+        print("2. Atualizar Perfil Nutricional")
+        print("3. Registrar Dieta Diária")
+        print("4. Gerar Orientações Nutricionais")
+        print("5. Registrar Consumo de Água")
+        print("6. Registrar Uso de Suplementos")
+        print("7. Adicionar Alerta")
+        print("8. Fornecer Feedback ao Nutricionista")
+        print("9. Sair")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            aluno.preencher_questionario_inicial()
+
+        elif opcao == "2":
+            aluno.atualizar_perfil_nutricional()
+
+        elif opcao == "3":
+            aluno.registrar_dieta_diaria()
+
+        elif opcao == "4":
+            aluno.gerar_orientacoes_nutricionais()
+
+        elif opcao == "5":
+            aluno.registrar_acompanhamento_agua()
+
+        elif opcao == "6":
+            aluno.registrar_acompanhamento_suplementos()
+
+        elif opcao == "7":
+            aluno.adicionar_alerta()
+
+        elif opcao == "8":
+            aluno.fornecer_feedback_nutricionista()
+
+        elif opcao == "9":
+            print("Saindo...")
+            break
+
+        else:
+            print("Opção inválida. Escolha uma opção válida.\n")
+
+
+# Chamar a função principal do menu de nutrição para começar a interação
+if __name__ == "__main__":
+    menu_nutricao()
