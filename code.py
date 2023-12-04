@@ -163,21 +163,19 @@ def salvar_csv(alunos):
             metas = ' | '.join([f"{meta['numero']} - {meta['descricao']} - {meta['data_limite']} - {meta['alcancada']}" for meta in aluno.metas]).replace(',', ';')
             avaliacoes = ' | '.join([f"{avaliacao.tipo} - {avaliacao.data} - {avaliacao.descricao} - {avaliacao.presenca_confirmada} - {avaliacao.avaliacao_realizada}" for avaliacao in aluno.avaliacoes]).replace(',', ';')
             arquivo_csv.write(f"{aluno.nome},{aluno.cpf},{aluno.celular},{aluno.email},{aluno.formatar_idade()},{aluno.formatar_pesos()},{aluno.formatar_alturas()},{historico},{metas},{avaliacoes}\n")
-
-
+        
 def mostrar_menu():
     print("### MENU ###")
     print("1. Cadastrar novo aluno")
     print("2. Adicionar histórico médico a um aluno")
     print("3. Realizar avaliação de um aluno")
     print("4. Visualizar informações de um aluno")
-    print("5. Verificar Alertas")
+    print("5. Informações nutricionais do aluno")
     print("6. Atualizar Alarmes")
     print("7. Modificar Alarmes")
-    print("8. Sair")
+    print("8. Verificar Alertas")
+    print("9. Sair")
 
-
-# Código principal
 alunos = carregar_csv()
 sistema_alertas = SistemaAlertas(alunos)
 
@@ -195,148 +193,85 @@ while True:
         if not alunos:
             print("Nenhum aluno cadastrado ainda.")
         else:
-            print("Alunos disponíveis para adicionar histórico médico:")
-            for i, aluno in enumerate(alunos):
-                print(f"{i + 1}. {aluno.nome}")
+            termo_busca = input("Digite o nome ou CPF do aluno para adicionar histórico: ")
+            aluno_encontrado = buscar_aluno(alunos, termo_busca)
 
-            indice_aluno = int(input("Escolha o número do aluno para adicionar histórico: ")) - 1
-            if 0 <= indice_aluno < len(alunos):
-                adicionar_informacao_medica(alunos[indice_aluno])
-                adicionar_metas(alunos[indice_aluno])  # Adiciona metas ao histórico médico
+            if aluno_encontrado:
+                adicionar_informacao_medica(aluno_encontrado)
+                adicionar_metas(aluno_encontrado)
                 salvar_csv(alunos)
                 print("Histórico médico e metas adicionados com sucesso!")
-
             else:
-                print("Índice inválido.")
+                print("Aluno não encontrado.")
 
     elif opcao == "3":
         if not alunos:
             print("Nenhum aluno cadastrado ainda.")
         else:
-            print("Alunos disponíveis para realizar avaliação:")
-            for i, aluno in enumerate(alunos):
-                print(f"{i + 1}. {aluno.nome}")
+            termo_busca = input("Digite o nome ou CPF do aluno para realizar avaliação: ")
+            aluno_encontrado = buscar_aluno(alunos, termo_busca)
 
-            indice_aluno = int(input("Escolha o número do aluno para realizar avaliação: ")) - 1
-            if 0 <= indice_aluno < len(alunos):
-                realizar_avaliacao(alunos[indice_aluno])
+            if aluno_encontrado:
+                realizar_avaliacao(aluno_encontrado)
                 salvar_csv(alunos)
                 print("Avaliação realizada com sucesso!")
-
             else:
-                print("Índice inválido.")
+                print("Aluno não encontrado.")
 
     elif opcao == "4":
         if not alunos:
             print("Nenhum aluno cadastrado ainda.")
         else:
-            print("Alunos disponíveis para visualizar informações:")
-            for i, aluno in enumerate(alunos):
-                print(f"{i + 1}. {aluno.nome}")
+            termo_busca = input("Digite o nome ou CPF do aluno para visualizar informações: ")
+            aluno_encontrado = buscar_aluno(alunos, termo_busca)
 
-            indice_aluno = int(input("Escolha o número do aluno para visualizar informações: ")) - 1
-            if 0 <= indice_aluno < len(alunos):
-                alunos[indice_aluno].mostrar_informacoes()
+            if aluno_encontrado:
+                aluno_encontrado.mostrar_informacoes()
             else:
-                print("Índice inválido.")
+                print("Aluno não encontrado.")
 
     elif opcao == "5":
-        sistema_alertas.verificar_alertas()
+        if not alunos:
+            print("Nenhum aluno cadastrado ainda.")
+        else:
+            termo_busca = input("Digite o nome ou CPF do aluno para visualizar informações nutricionais: ")
+            aluno_encontrado = buscar_aluno(alunos, termo_busca)
 
-    elif opcao == "6":
-        if not
-                print("Nenhum aluno cadastrado ainda.")
+            if aluno_encontrado:
+                aluno_encontrado.mostrar_informacoes_nutricao()
             else:
-                print("Alunos disponíveis para visualizar informações:")
-                for i, aluno in enumerate(alunos):
-                    print(f"{i + 1}. {aluno.nome}")
-
-                indice_aluno = int(input("Escolha o número do aluno para visualizar informações: ")) - 1
-                if 0 <= indice_aluno < len(alunos):
-                    alunos[indice_aluno].mostrar_informacoes()
-                else:
-                    print("Índice inválido.")
-
-    elif opcao == "5":
-        sistema_alertas.verificar_alertas()
+                print("Aluno não encontrado.")
 
     elif opcao == "6":
         if not alunos:
             print("Nenhum aluno cadastrado ainda.")
         else:
-            print("Alunos disponíveis para atualizar presença:")
-            for i, aluno in enumerate(alunos):
-                print(f"{i + 1}. {aluno.nome}")
+            termo_busca = input("Digite o nome ou CPF do aluno para atualizar presença: ")
+            aluno_encontrado = buscar_aluno(alunos, termo_busca)
 
-            indice_aluno = int(input("Escolha o número do aluno para atualizar presença: ")) - 1
-            if 0 <= indice_aluno < len(alunos):
-                aluno = alunos[indice_aluno]
-                print(f"Atualizando presença para o aluno {aluno.nome}")
-                data_avaliacao = input("Informe a data da sessão de treino (AAAA-MM-DD): ")
-                presente = input("O aluno esteve presente? (s/n): ").lower()
-
-                for avaliacao in aluno.avaliacoes:
-                    if avaliacao.tipo == "treino" and avaliacao.data == data_avaliacao:
-                        avaliacao.presenca_confirmada = presente == 's'
-
-                salvar_csv(alunos)
-                salvar_txt(alunos)
-                print("Presença atualizada com sucesso!")
+            if aluno_encontrado:
+                # FUNÇÃO OU TRECHO DO CÓDIGO
+            else:
+                print("Aluno não encontrado.")
 
     elif opcao == "7":
         if not alunos:
             print("Nenhum aluno cadastrado ainda.")
         else:
-            print("Alunos disponíveis para modificar alarmes:")
-            for i, aluno in enumerate(alunos):
-                print(f"{i + 1}. {aluno.nome}")
+            termo_busca = input("Digite o nome ou CPF do aluno para modificar alarmes: ")
+            aluno_encontrado = buscar_aluno(alunos, termo_busca)
 
-            indice_aluno = int(input("Escolha o número do aluno para modificar alarmes: ")) - 1
-            if 0 <= indice_aluno < len(alunos):
-                aluno = alunos[indice_aluno]
-                print(f"Modificando alarmes para o aluno {aluno.nome}")
-                aluno.dias_alerta = int(input("Informe o novo número de dias para alerta: "))
-                salvar_csv(alunos)
-                salvar_txt(alunos)
-                print("Alarmes modificados com sucesso!")
+            if aluno_encontrado:
+                # FUNÇÃO OU TRECHO DO CÓDIGO
+            else:
+                print("Aluno não encontrado.")
 
     elif opcao == "8":
-        if not alunos:
-            print("Nenhum aluno cadastrado ainda.")
-        else:
-            print("Alunos disponíveis para configurar alarmes:")
-            for i, aluno in enumerate(alunos):
-                print(f"{i + 1}. {aluno.nome}")
-
-            indice_aluno = int(input("Escolha o número do aluno para configurar alarmes: ")) - 1
-            if 0 <= indice_aluno < len(alunos):
-                aluno = alunos[indice_aluno]
-                print(f"Configurando alarmes para o aluno {aluno.nome}")
-                aluno.dias_alerta = int(input("Informe o número de dias para alerta: "))
-                salvar_csv(alunos)
-                salvar_txt(alunos)
-                print("Alarmes configurados com sucesso!")
+        sistema_alertas.verificar_alertas()
 
     elif opcao == "9":
         print("Saindo...")
         break
-    
-    elif opcao == "10":
-        if not alunos:
-            print("Nenhum aluno cadastrado ainda.")
-        else:
-            termo_busca = input("Digite o nome ou CPF do aluno para visualizar informações de nutrição: ")
-            aluno_encontrado = None
-            
-            for aluno in alunos:
-                if termo_busca.lower() in aluno.nome.lower() or termo_busca in aluno.cpf:
-                    aluno_encontrado = aluno
-                    break
-                    
-            if aluno_encontrado:
-                aluno_encontrado.mostrar_informacoes_nutricao()
-            else:
-                print("Aluno não encontrado.")
-            
+
     else:
         print("Opção inválida. Escolha uma opção válida.")
