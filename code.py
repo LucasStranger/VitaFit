@@ -54,6 +54,29 @@ class Aluno:
         self.avaliacoes = avaliacoes if avaliacoes else []
         self.dias_alerta = dias_alerta
 
+    def adicionar_informacoes_nutricao(self, perfil_nutricional, questionario, registro_dieta,
+                                      orientacoes_nutricionais, acompanhamento_agua,
+                                      acompanhamento_suplementos, alertas, feedback_nutricionista):
+        self.perfil_nutricional = perfil_nutricional
+        self.questionario = questionario
+        self.registro_dieta = registro_dieta
+        self.orientacoes_nutricionais = orientacoes_nutricionais
+        self.acompanhamento_agua = acompanhamento_agua
+        self.acompanhamento_suplementos = acompanhamento_suplementos
+        self.alertas = alertas
+        self.feedback_nutricionista = feedback_nutricionista
+
+    def mostrar_informacoes_nutricao(self):
+        print("\n### Informações de Nutrição ###")
+        print(f"Perfil Nutricional: {self.perfil_nutricional}")
+        print(f"Questionário: {self.questionario}")
+        print(f"Registro de Dieta: {self.registro_dieta}")
+        print(f"Orientações Nutricionais: {self.orientacoes_nutricionais}")
+        print(f"Acompanhamento de Água: {self.acompanhamento_agua}")
+        print(f"Acompanhamento de Suplementos: {self.acompanhamento_suplementos}")
+        print(f"Alertas: {self.alertas}")
+        print(f"Feedback ao Nutricionista: {self.feedback_nutricionista}")
+        
     def adicionar_historico_medico(self, informacao):
         self.historico_medico.append(informacao)
 
@@ -297,6 +320,23 @@ while True:
     elif opcao == "9":
         print("Saindo...")
         break
-
+    
+    elif opcao == "10":
+        if not alunos:
+            print("Nenhum aluno cadastrado ainda.")
+        else:
+            termo_busca = input("Digite o nome ou CPF do aluno para visualizar informações de nutrição: ")
+            aluno_encontrado = None
+            
+            for aluno in alunos:
+                if termo_busca.lower() in aluno.nome.lower() or termo_busca in aluno.cpf:
+                    aluno_encontrado = aluno
+                    break
+                    
+            if aluno_encontrado:
+                aluno_encontrado.mostrar_informacoes_nutricao()
+            else:
+                print("Aluno não encontrado.")
+            
     else:
         print("Opção inválida. Escolha uma opção válida.")
