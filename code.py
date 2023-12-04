@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class SistemaAlertas:
     def __init__(self, alunos):
         self.alunos = alunos
-
+        
     def verificar_alertas(self):
         hoje = datetime.now()
 
@@ -38,7 +38,6 @@ class SistemaAlertas:
 
                 if diferenca_dias >= aluno.dias_alerta:
                     print(f"ALERTA: Aluno {aluno.nome} não alcançou a meta '{meta['descricao']}' até a data limite {meta['data_limite']}.")
-
 
 class Aluno:
     def __init__(self, nome, cpf, celular, email, idade, peso, altura, historico_medico=None, metas=None, avaliacoes=None, dias_alerta=7):
