@@ -1,11 +1,1 @@
-F-03 Histórico de Acompanhamento:
-
-O sistema deve armazenar um histórico detalhado das avaliações e do progresso de
-
-cada aluno ao longo do tempo. Os professores têm acesso fácil a esse histórico para análise e comparação
-
-RF-04 Alertas Automaticos:
-
-Caso um aluno não compareça a uma sessão de treino programada, o sistema enviară automaticamente um alerta para o professor responsável.
-
-Alertas também podem ser configurados para marcar avaliações pendentes ou metas não alcançadas
+.
