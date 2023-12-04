@@ -38,16 +38,29 @@ class CentralTreinamento:
         self.biblioteca_videos[nome] = link
 
 
-# Funções interligando Módulo 1 e Módulo 3
-
 def cadastrar_aluno():
-    # Código para cadastro de aluno do Módulo 1
+    nome = input("Nome completo: ")
+    cpf = input("CPF: ")
+    celular = input("Número de celular: ")
+    email = input("Email: ")
+    idade = int(input("Idade: "))
+    peso = float(input("Peso (kg): "))
+    altura = float(input("Altura (metros): "))
+    return Aluno(nome, cpf, celular, email, idade, peso, altura)
+
 
 def adicionar_informacao_medica(aluno):
-    # Código para adicionar histórico médico do Módulo 1
+    informacao = input("Informe o histórico médico relevante: ")
+    aluno.adicionar_historico_medico(informacao)
+    print("Informação médica adicionada com sucesso!")
+
 
 def realizar_avaliacao(aluno):
-    # Código para realizar avaliação do Módulo 1
+    tipo = input("Tipo de avaliação (semanal, quinzenal, mensal): ")
+    informacoes = input("Informações da avaliação: ")
+    aluno.adicionar_avaliacao({tipo: informacoes})
+    print("Avaliação realizada com sucesso!")
+
 
 def criar_perfil_treino(aluno):
     tipo = input("Tipo de treino: ")
@@ -55,11 +68,13 @@ def criar_perfil_treino(aluno):
     aluno.adicionar_perfil_treino(tipo, informacoes)
     print("Perfil de treino criado com sucesso!")
 
+
 def adicionar_video(biblioteca):
     nome = input("Nome do vídeo: ")
     link = input(f"Link do vídeo de {nome}: ")
     biblioteca.adicionar_video(nome, link)
     print("Vídeo adicionado à biblioteca com sucesso!")
+
 
 def criar_rotina_treino(aluno):
     tipo_treino = input("Tipo de treino para adicionar rotina: ")
@@ -67,8 +82,70 @@ def criar_rotina_treino(aluno):
     aluno.adicionar_rotina_treino(tipo_treino, rotina)
     print("Rotina de treino adicionada com sucesso!")
 
+
 def adicionar_desempenho_treino(aluno):
     tipo_treino = input("Tipo de treino para adicionar desempenho: ")
     desempenho = input(f"Desempenho do aluno para {tipo_treino}: ")
     aluno.adicionar_desempenho(tipo_treino, desempenho)
     print("Desempenho adicionado com sucesso!")
+
+
+def main():
+    central = CentralTreinamento()
+    alunos = []
+
+    while True:
+        print("\n1. Cadastrar Aluno")
+        print("2. Adicionar Informação Médica")
+        print("3. Realizar Avaliação")
+        print("4. Criar Perfil de Treino")
+        print("5. Adicionar Vídeo à Biblioteca")
+        print("6. Criar Rotina de Treino")
+        print("7. Adicionar Desempenho de Treino")
+        print("8. Sair")
+
+        escolha = input("\nEscolha uma opção: ")
+
+        if escolha == '1':
+            aluno = cadastrar_aluno()
+            alunos.append(aluno)
+        elif escolha == '2':
+            print("Escolha um aluno para adicionar informações médicas:")
+            for i, aluno in enumerate(alunos, 1):
+                print(f"{i}. {aluno.nome}")
+            aluno_index = int(input("Escolha o número do aluno: ")) - 1
+            adicionar_informacao_medica(alunos[aluno_index])
+        elif escolha == '3':
+            print("Escolha um aluno para realizar a avaliação:")
+            for i, aluno in enumerate(alunos, 1):
+                print(f"{i}. {aluno.nome}")
+            aluno_index = int(input("Escolha o número do aluno: ")) - 1
+            realizar_avaliacao(alunos[aluno_index])
+        elif escolha == '4':
+            print("Escolha um aluno para criar o perfil de treino:")
+            for i, aluno in enumerate(alunos, 1):
+                print(f"{i}. {aluno.nome}")
+            aluno_index = int(input("Escolha o número do aluno: ")) - 1
+            criar_perfil_treino(alunos[aluno_index])
+        elif escolha == '5':
+            adicionar_video(central)
+        elif escolha == '6':
+            print("Escolha um aluno para criar a rotina de treino:")
+            for i, aluno in enumerate(alunos, 1):
+                print(f"{i}. {aluno.nome}")
+            aluno_index = int(input("Escolha o número do aluno: ")) - 1
+            criar_rotina_treino(alunos[aluno_index])
+        elif escolha == '7':
+            print("Escolha um aluno para adicionar desempenho de treino:")
+            for i, aluno in enumerate(alunos, 1):
+                print(f"{i}. {aluno.nome}")
+            aluno_index = int(input("Escolha o número do aluno: ")) - 1
+            adicionar_desempenho_treino(alunos[aluno_index])
+        elif escolha == '8':
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+
+if __name__ == "__main__":
+    main()
