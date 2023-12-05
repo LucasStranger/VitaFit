@@ -25,6 +25,20 @@ class Aluno:
         }
         self.avaliacoes = avaliacoes if avaliacoes else []
         self.dias_alerta = dias_alerta
+        self.desempenho_treino = {}
+        self.rotinas_treino = {}
+    def adicionar_perfil_treino(self, tipo, informacoes):
+        self.perfil_treino[tipo] = informacoes
+
+    
+    def adicionar_rotina_treino(self, tipo_treino, rotina):
+        if tipo_treino in self.perfil_treino:
+            self.perfil_treino[tipo_treino]['rotina'] = rotina
+
+    
+    def adicionar_desempenho(self, tipo_treino, desempenho):
+        if tipo_treino in self.perfil_treino:
+            self.perfil_treino[tipo_treino]['desempenho'] = desempenho
     
     def sugerir_ajustes_plano_treino(self):
         ajustes = f"## Sugestões de Ajuste no Plano de Treino para {self.nome} ##\n"
@@ -64,6 +78,12 @@ def adicionar_informacao_medica(aluno):
     informacao = input("Informe o histórico médico relevante: ")
     aluno.adicionar_historico_medico(informacao)
 
+def adicionar_rotina_treino(self, tipo_treino, rotina):
+        self.rotinas_treino[tipo_treino] = rotina
+
+def adicionar_desempenho(self, tipo_treino, desempenho):
+        self.desempenho_treino[tipo_treino] = desempenho
+
 def cadastrar_aluno():
     nome = input("Nome completo: ")
     cpf = input("CPF: ")
@@ -95,6 +115,90 @@ def cadastrar_aluno():
 
     return Aluno(nome, cpf, celular, email, idade, peso, altura, historico, metas)
 
+class CentralTreinamento:
+    def __init__(self):
+        self.biblioteca_videos = {}
+
+    def adicionar_video(self, nome, link):
+        self.biblioteca_videos[nome] = link
+    
+    def adicionar_informacao_perfil_treino(aluno):
+        tipo = input("Tipo de informação a adicionar (histórico, metas, restrições, preferências): ")
+        informacoes = input("Informações a adicionar: ")
+
+        if tipo in aluno.perfil_treino:
+            if isinstance(aluno.perfil_treino[tipo], list):
+                aluno.perfil_treino[tipo].append(informacoes)
+            elif isinstance(aluno.perfil_treino[tipo], dict):
+                chave = input("Chave para adicionar: ")
+                aluno.perfil_treino[tipo][chave] = informacoes
+            print(f"Informação '{informacoes}' adicionada ao perfil de treino de {aluno.nome}!")
+        else:
+            print("Tipo de informação inválido ou não suportado para o perfil de treino.")
+    
+    def salvar_perfil_treino_csv(alunos):
+        with open('perfil_treino.csv', mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Nome', 'Tipo', 'Informacoes'])
+
+            for aluno in alunos:
+                for tipo, informacoes in aluno.perfil_treino.items():
+                    if isinstance(informacoes, list):
+                        for info in informacoes:
+                            writer.writerow([aluno.nome, tipo, info])
+                    elif isinstance(informacoes, dict):
+                        for chave, valor in informacoes.items():
+                            writer.writerow([aluno.nome, f"{tipo} - {chave}", valor])
+                    else:
+                        writer.writerow([aluno.nome, tipo, informacoes])
+    
+    def criar_rotina_treino(aluno):
+        tipo_treino = input("Tipo de treino para adicionar rotina: ")
+        rotina = input(f"Rotina de treino para {tipo_treino}: ")
+        aluno.adicionar_rotina_treino(tipo_treino, rotina)
+        print("Rotina de treino adicionada com sucesso!")
+    
+    def adicionar_desempenho_treino(aluno):
+        tipo_treino = input("Tipo de treino para adicionar desempenho: ")
+        desempenho = input(f"Desempenho do aluno para {tipo_treino}: ")
+        aluno.adicionar_desempenho(tipo_treino, desempenho)
+        print("Desempenho adicionado com sucesso!")
+    
+    def adicionar_video(biblioteca):
+        nome = input("Nome do vídeo: ")
+        link = input(f"Link do vídeo de {nome}: ")
+        biblioteca.adicionar_video(nome, link)
+        print("Vídeo adicionado à biblioteca com sucesso!")
+    
+    def salvar_links_videos(biblioteca):
+        with open('links_videos.txt', 'w') as file:
+            for video in biblioteca.videos:
+                file.write(f"{video['Nome']}: {video['Link']}\n")
+        print("Links dos vídeos salvos com sucesso!")
+    def salvar_rotinas_treino(alunos):
+        with open('rotinas_treino.csv', 'w', newline='', encoding='utf-8') as file:
+            fieldnames = ['Aluno', 'Tipo Treino', 'Rotina']
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+
+            for aluno in alunos:
+                for tipo, rotina in aluno.rotinas_treino.items():
+                    writer.writerow({'Aluno': aluno.nome, 'Tipo Treino': tipo, 'Rotina': rotina})
+    def salvar_desempenho(alunos):
+        with open('desempenho_alunos.csv', 'w', newline='', encoding='utf-8') as file:
+            fieldnames = ['Aluno', 'Tipo Treino', 'Desempenho']
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+
+            for aluno in alunos:
+                for tipo, desempenho in aluno.desempenho_treino.items():
+                    writer.writerow({'Aluno': aluno.nome, 'Tipo Treino': tipo, 'Desempenho': desempenho})
+    class BibliotecaVideos:
+        def __init__(self):
+            self.videos = []
+
+        def adicionar_video(self, nome, link):
+            self.videos.append({'Nome': nome, 'Link': link})
 class Avaliacao:
     def __init__(self, tipo, data, testes_fisicos=None, medidas=None, desempenho_exercicios=None):
         self.tipo = tipo
@@ -275,6 +379,200 @@ class SistemaAlertas:
             if not meta['alcancada']:
                 if meta['data_limite'] <= data_hoje:
                     print(f"ALERTA: Aluno {aluno.nome} não alcançou a meta '{meta['descricao']}' até a data limite {meta['data_limite']}.")
+class Produto:
+    def __init__(self, descricao, preco, tamanhos_disponiveis, imagem):
+        self.descricao = descricao
+        self.preco = preco
+        self.tamanhos_disponiveis = tamanhos_disponiveis
+        self.imagem = imagem
+
+class SistemaLoja:
+    def __init__(self):
+        self.produtos = []
+        self.estoque = {}
+
+    def carregar_produtos_e_estoque(self):
+        try:
+            with open('produtos.csv', newline='', encoding='utf-8') as file:
+                reader = csv.reader(file)
+                next(reader) 
+                for row in reader:
+                    descricao, preco, tamanhos, imagem = row
+                    preco = float(preco)
+                    tamanhos = tamanhos.split(',')
+                    produto = Produto(descricao, preco, tamanhos, imagem)
+                    self.produtos.append(produto)
+
+            with open('estoque.csv', newline='', encoding='utf-8') as file:
+                reader = csv.reader(file)
+                next(reader)
+                for row in reader:
+                    descricao, tamanho, quantidade = row
+                    chave = (descricao, tamanho)
+                    self.estoque[chave] = int(quantidade)
+
+        except FileNotFoundError:
+            pass 
+
+    def salvar_produtos_e_estoque(self):
+        with open('produtos.csv', 'w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Descrição', 'Preço', 'Tamanhos Disponíveis', 'Imagem'])
+            for produto in self.produtos:
+                writer.writerow([produto.descricao, produto.preco, ','.join(produto.tamanhos_disponiveis), produto.imagem])
+
+        with open('estoque.csv', 'w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Descrição', 'Tamanho', 'Quantidade'])
+            for (descricao, tamanho), quantidade in self.estoque.items():
+                writer.writerow([descricao, tamanho, quantidade])
+
+    def cadastrar_produto(self, produto, quantidades):
+        if produto not in self.produtos:
+            self.produtos.append(produto)
+            self.atualizar_estoque(produto, quantidades)
+            print("Produto cadastrado com sucesso!")
+        else:
+            print("Produto já cadastrado. Use a opção de adicionar quantidade.")
+
+    def adicionar_quantidade(self, produto, quantidades):
+        if produto in self.produtos:
+            self.atualizar_estoque(produto, quantidades)
+            print("Quantidade adicionada com sucesso!")
+        else:
+            print("Produto não cadastrado. Use a opção de cadastrar produto.")
+
+    def retirar_quantidade(self, produto, quantidades):
+        if produto in self.produtos:
+            if all(quantidades[i] <= self.estoque.get((produto.descricao, produto.tamanhos_disponiveis[i]), 0) for i in range(len(quantidades))):
+                self.atualizar_estoque(produto, [-q for q in quantidades])
+                print("Quantidade retirada com sucesso!")
+            else:
+                print("Quantidade insuficiente no estoque.")
+        else:
+            print("Produto não cadastrado. Use a opção de cadastrar produto.")
+
+    def atualizar_estoque(self, produto, quantidades):
+        for i, tamanho in enumerate(produto.tamanhos_disponiveis):
+            chave = (produto.descricao, tamanho)
+            quantidade = quantidades[i]
+            if chave in self.estoque:
+                self.estoque[chave] += quantidade
+            else:
+                self.estoque[chave] = quantidade
+
+    def exibir_estoque(self):
+        print("Estoque:")
+        for chave, quantidade in self.estoque.items():
+            descricao, tamanho = chave
+            print(f"{descricao} - Tamanho: {tamanho} - Quantidade: {quantidade}")
+
+    def enviar_alerta(self, aluno, preferencias):
+        pass
+class AvaliacaoNutricional:
+    def __init__(self):
+        self.perfil_nutricional = {}
+        self.questionario = {}
+        self.registro_dieta = []
+        self.orientacoes_nutricionais = {}
+        self.acompanhamento_agua = {}
+        self.acompanhamento_suplementos = {}
+        self.alertas = []
+        self.feedback_nutricionista = []
+
+    def preencher_questionario_inicial(self):
+        print("### Preencher Questionário Inicial ###")
+        nome = input("Nome completo: ")
+        idade = int(input("Idade: "))
+        alergias = input("Alergias alimentares (separe por vírgula se houver): ").split(',')
+        objetivos_nutricionais = input("Objetivos nutricionais: ")
+
+        self.questionario = {
+            'nome': nome,
+            'idade': idade,
+            'alergias': alergias,
+            'objetivos_nutricionais': objetivos_nutricionais
+        }
+        print("Questionário preenchido com sucesso!\n")
+    
+    def atualizar_perfil_nutricional(self):
+        print("### Atualizar Perfil Nutricional ###")
+        peso = float(input("Peso atual (em kg): "))
+        altura = float(input("Altura atual (em metros): "))
+        preferencias_alimentares = input("Preferências alimentares: ")
+        restricoes_alimentares = input("Restrições alimentares: ")
+
+        self.perfil_nutricional = {
+            'peso': peso,
+            'altura': altura,
+            'preferencias_alimentares': preferencias_alimentares,
+            'restricoes_alimentares': restricoes_alimentares
+        }
+        print("Perfil nutricional atualizado com sucesso!\n")
+
+    def registrar_dieta_diaria(self):
+        print("### Registrar Dieta Diária ###")
+        dieta = input("Descreva sua dieta diária: ")
+        self.registro_dieta.append(dieta)
+        print("Dieta registrada com sucesso!\n")
+
+    def gerar_orientacoes_nutricionais(self):
+        print("### Gerar Orientações Nutricionais ###")
+        orientacoes = input("Forneça orientações nutricionais: ")
+        self.orientacoes_nutricionais = orientacoes
+        print("Orientações nutricionais geradas com sucesso!\n")
+
+    def registrar_acompanhamento_agua(self):
+        print("### Registrar Consumo de Água ###")
+        data = input("Data do registro (DD/MM/AAAA): ")
+        quantidade = float(input("Quantidade de água consumida (em ml): "))
+        self.acompanhamento_agua[data] = quantidade
+        print("Consumo de água registrado com sucesso!\n")
+
+    def registrar_acompanhamento_suplementos(self):
+        print("### Registrar Uso de Suplementos ###")
+        suplemento = input("Descreva o suplemento utilizado: ")
+        self.acompanhamento_suplementos = suplemento
+        print("Uso de suplemento registrado com sucesso!\n")
+
+    def adicionar_alerta(self):
+        print("### Adicionar Alerta ###")
+        alerta = input("Descreva o alerta: ")
+        self.alertas.append(alerta)
+        print("Alerta adicionado com sucesso!\n")
+
+    def fornecer_feedback_nutricionista(self):
+        print("### Fornecer Feedback ao Nutricionista ###")
+        feedback = input("Forneça seu feedback: ")
+        self.feedback_nutricionista.append(feedback)
+        print("Feedback enviado com sucesso!\n")
+
+    def salvar_avaliacoes_nutricionais(avaliacoes):
+        with open('avaliacoes_nutricionais.csv', 'w', newline='', encoding='utf-8') as file:
+            fieldnames = ['Nome', 'Idade', 'Alergias', 'Objetivos Nutricionais', 'Peso', 'Altura',
+                        'Preferencias Alimentares', 'Restricoes Alimentares', 'Registro Dieta',
+                        'Orientacoes Nutricionais', 'Acompanhamento Agua', 'Acompanhamento Suplementos',
+                        'Alertas', 'Feedback Nutricionista']
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+
+            for avaliacao in avaliacoes:
+                writer.writerow({
+                    'Nome': avaliacao.questionario.get('nome', ''),
+                    'Idade': avaliacao.questionario.get('idade', ''),
+                    'Alergias': ', '.join(avaliacao.questionario.get('alergias', [])),
+                    'Objetivos Nutricionais': avaliacao.questionario.get('objetivos_nutricionais', ''),
+                    'Peso': avaliacao.perfil_nutricional.get('peso', ''),
+                    'Altura': avaliacao.perfil_nutricional.get('altura', ''),
+                    'Preferencias Alimentares': avaliacao.perfil_nutricional.get('preferencias_alimentares', ''),
+                    'Restricoes Alimentares': avaliacao.perfil_nutricional.get('restricoes_alimentares', ''),
+                    'Registro Dieta': '\n'.join(avaliacao.registro_dieta),
+                    'Orientacoes Nutricionais': avaliacao.orientacoes_nutricionais,
+                    'Acompanhamento Agua': '\n'.join([f"{data}: {quantidade}ml" for data, quantidade in avaliacao.acompanhamento_agua.items()]),
+                    'Acompanhamento Suplementos': avaliacao.acompanhamento_suplementos,
+                    'Alertas': '\n'.join(avaliacao.alertas),
+                    'Feedback Nutricionista': '\n'.join(avaliacao.feedback_nutricionista)
+                })
 def carregar_csv():
     alunos = []
     try:
@@ -298,7 +596,42 @@ def salvar_csv(alunos):
             historico = ' | '.join(aluno.historico_medico).replace(',', ';')
             arquivo_csv.write(f"{aluno.nome},{aluno.cpf},{aluno.celular},{aluno.email},{aluno.idade},{aluno.peso},{aluno.altura},{historico}\n")
 
-
+def mostrar_menu3():
+    print("1 - perfil de treino")
+    print("2 - adicionar videos a biblioteca")
+    print("3 - Adicionar Rotina de treino")
+    print("4 - adicionar desempenho de treino")
+    escolha = input("digite a operação que deseja fazer: ")
+    while True:
+        if escolha == "1":
+            CentralTreinamento.adicionar_informacao_perfil_treino
+        elif escolha == "2":
+            CentralTreinamento.adicionar_video
+        elif escolha == "3":
+            CentralTreinamento.criar_rotina_treino
+        elif escolha == "4":
+            CentralTreinamento.adicionar_desempenho_treino
+        else:
+            print("saindo do módulo 3")
+            break
+def mostrar_menu_completo():
+    print("Módulo 1 - Cadastro e acompanhamento individual")
+    print("Módulo 2 - VitaStyle")
+    print("Módulo 3 - Central de Treinamento individual")
+    print("Módulo 4 - Avaliação nutricional")
+    print(" 5 - Sair.")
+    escolha = input("Escolha o seu módulo:")
+    while True:
+        if escolha == "1":
+            mostrar_menu()
+        elif escolha == "2":
+            menu()
+        elif escolha == "3":
+            mostrar_menu3()
+        elif escolha == "4":
+            menu_nutricao()
+        else:
+            break
 def mostrar_menu():
     print("### MENU ###")
     print("1. Cadastrar novo aluno")
@@ -385,6 +718,109 @@ while True:
         break
     else:
         print("Opção inválida. Escolha uma opção válida.")
+def menu():
+    print("1. Cadastro de Produtos")
+    print("2. Adicionar Quantidade ao Estoque")
+    print("3. Retirar Quantidade do Estoque")
+    print("4. Gestão de Estoque")
+    print("5. Sair")
 
+if __name__ == "__main__":
+    sistema_loja = SistemaLoja()
+    sistema_loja.carregar_produtos_e_estoque()
 
+    while True:
+        menu()
+        opcao = input("Escolha uma opção (1, 2, 3, 4 ou 5): ")
+
+        if opcao == "1":
+            descricao = input("Digite a descrição do produto: ")
+            preco = float(input("Digite o preço do produto: "))
+            tamanhos = input("Digite os tamanhos disponíveis (separados por espaço): ").split()
+            imagem = input("Digite o nome da imagem representativa: ")
+
+            quantidades = []
+            for tamanho in tamanhos:
+                quantidade = int(input(f"Digite a quantidade para o tamanho {tamanho}: "))
+                quantidades.append(quantidade)
+
+            produto = Produto(descricao, preco, tamanhos, imagem)
+            sistema_loja.cadastrar_produto(produto, quantidades)
+
+        elif opcao == "2":
+            descricao = input("Digite a descrição do produto para adicionar quantidade: ")
+            produto = next((p for p in sistema_loja.produtos if p.descricao == descricao), None)
+
+            if produto:
+                tamanhos = input("Digite os tamanhos disponíveis (separados por espaço): ").split()
+                quantidades = []
+                for tamanho in tamanhos:
+                    quantidade = int(input(f"Digite a quantidade para o tamanho {tamanho}: "))
+                    quantidades.append(quantidade)
+
+                sistema_loja.adicionar_quantidade(produto, quantidades)
+            else:
+                print("Produto não encontrado. Cadastre o produto primeiro.")
+
+        elif opcao == "3":
+            descricao = input("Digite a descrição do produto para retirar quantidade: ")
+            produto = next((p for p in sistema_loja.produtos if p.descricao == descricao), None)
+
+            if produto:
+                tamanhos = input("Digite os tamanhos disponíveis (separados por espaço): ").split()
+                quantidades = []
+                for tamanho in tamanhos:
+                    quantidade = int(input(f"Digite a quantidade para o tamanho {tamanho}: "))
+                    quantidades.append(quantidade)
+
+                sistema_loja.retirar_quantidade(produto, quantidades)
+            else:
+                print("Produto não encontrado. Cadastre o produto primeiro.")
+
+        elif opcao == "4":
+            sistema_loja.exibir_estoque()
+
+        elif opcao == "5":
+            sistema_loja.salvar_produtos_e_estoque()
+            print("Saindo do programa.")
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
+def menu_nutricao(aluno):
+    while True:
+        print("### MENU NUTRIÇÃO ###")
+        print("1. Preencher Questionário Inicial")
+        print("2. Atualizar Perfil Nutricional")
+        print("3. Registrar Dieta Diária")
+        print("4. Gerar Orientações Nutricionais")
+        print("5. Registrar Consumo de Água")
+        print("6. Registrar Uso de Suplementos")
+        print("7. Adicionar Alerta")
+        print("8. Fornecer Feedback ao Nutricionista")
+        print("9. Sair")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            aluno.preencher_questionario_inicial()
+        elif opcao == "2":
+            aluno.atualizar_perfil_nutricional()
+        elif opcao == "3":
+            aluno.registrar_dieta_diaria()
+        elif opcao == "4":
+            aluno.gerar_orientacoes_nutricionais()
+        elif opcao == "5":
+            aluno.registrar_acompanhamento_agua()
+        elif opcao == "6":
+            aluno.registrar_acompanhamento_suplementos()
+        elif opcao == "7":
+            aluno.adicionar_alerta()
+        elif opcao == "8":
+            aluno.fornecer_feedback_nutricionista()
+        elif opcao == "9":
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida. Escolha uma opção válida.\n")
 
